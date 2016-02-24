@@ -1,4 +1,4 @@
-package com.mirhoseini.example.utils;
+package com.mirhoseini.utils.example;
 
 import android.app.Activity;
 import android.os.Bundle;

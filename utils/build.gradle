@@ -5,8 +5,8 @@ apply plugin: 'com.jfrog.bintray'
 version = "1.0.0"
 group = "com.mirhoseini.utils"
 
-def siteUrl = "http://mirhoseini.com/utils"
-def gitUrl = "https://github.com/mmirhoseini/utils.git"
+def siteUrl = "http://mirhoseini.com/android-utils"
+def gitUrl = "https://github.com/mmirhoseini/android_utils.git"
 
 android {
     compileSdkVersion 23
@@ -38,7 +38,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "utils"
+        name = "android-utils"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["MIT"]

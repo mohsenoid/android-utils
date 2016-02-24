@@ -3,6 +3,7 @@ package com.mirhoseini.example.utils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import com.mirhoseini.utils.Utils;
 
@@ -20,5 +21,10 @@ public class MainActivity extends Activity {
 
     public void actionExitNormal(View view) {
         Utils.exit(this);
+    }
+
+    public void actionOpenUrl(View view) {
+        String url = ((EditText) findViewById(R.id.etUrl)).getText().toString();
+        Utils.openWebsite(this, url);
     }
 }

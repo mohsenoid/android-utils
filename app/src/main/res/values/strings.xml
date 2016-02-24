@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Utils Example</string>
-    <string name="btn_exit">Exit Normal</string>
-    <string name="btn_exit_kill_process">Kill Process</string>
-    <string name="txt_exit">Exiting Methods</string>
+    <string name="bt_exit">Exit Normal</string>
+    <string name="bt_exit_kill_process">Kill Process</string>
+    <string name="tv_exit">Exiting Methods</string>
+    <string name="tv_url">Open web URL</string>
+    <string name="bt_open">Open URL</string>
 </resources>

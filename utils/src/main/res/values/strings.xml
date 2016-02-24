@@ -1,3 +1,15 @@
 <resources>
+    <string name="msg_exit">Press back again to exit</string>
+    <string name="error_title">Error</string>
+    <string name="exit">Exit</string>
+    <string name="abort">Abort</string>
+    <string name="offline">Offline</string>
+    <string name="retry">Retry</string>
+    <string name="no_external_storage">No external storage is available&#8230;</string>
+    <string name="no_connection">No internet connection is available&#8230;</string>
+    <string name="no_connection_title">Network Error</string>
+    <string name="no_server">Server is not responsible&#8230;</string>
+    <string name="no_server_title">Server Error</string>
+    <string name="settings">Settings&#8230;</string>
 
 </resources>

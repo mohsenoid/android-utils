@@ -22,9 +22,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.text.TextUtils;
@@ -32,51 +29,44 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressLint("SimpleDateFormat")
 public class Utils {
 
     static String deviceInfo = "";
-    static List<BasicNameValuePair> deviceInfoParams = null;
     static enumDensity density = null;
+    static HashMap<String, String> deviceInfoParams;
 
     /**
-     * Copy an input stream to an output stream
+     * Copy an InputStream to an OutputStream
      *
-     * @param is Input
-     * @param os Output
+     * @param is InputStream
+     * @param os OutputStream
      */
-    public static void CopyStream(InputStream is, OutputStream os) {
+    public static void CopyStream(InputStream is, OutputStream os) throws IOException {
         final int buffer_size = 1024;
-        try {
-            byte[] bytes = new byte[buffer_size];
-            for (; ; ) {
-                int count = is.read(bytes, 0, buffer_size);
-                if (count == -1)
-                    break;
-                os.write(bytes, 0, count);
-            }
-        } catch (Exception ex) {
+        byte[] bytes = new byte[buffer_size];
+        for (; ; ) {
+            int count = is.read(bytes, 0, buffer_size);
+            if (count == -1)
+                break;
+            os.write(bytes, 0, count);
         }
     }
 
     /**
-     * Convert an array to csv format
+     * Convert an integer array to csv format
      *
      * @param array Input array
      * @return
@@ -115,19 +105,14 @@ public class Utils {
      * @param context Context of activity of an activity
      */
     public static void exit(Context context) {
-        try {
-            Activity activity = (Activity) context;
-            activity.finish();
-            // System.exit(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Activity activity = (Activity) context;
+        activity.finish();
     }
 
     /**
-     * Open website with one link in resource
+     * Open website with a URL in resources
      *
-     * @param context  Context of application
+     * @param context  Application context
      * @param resource Resource of string of a link
      * @throws NotFoundException
      */
@@ -137,9 +122,9 @@ public class Utils {
     }
 
     /**
-     * Open website with link string
+     * Open website with a string URL
      *
-     * @param context Context of application
+     * @param context Application context
      * @param url     link to open
      */
     public static void openWebsite(Context context, String url) {
@@ -149,7 +134,7 @@ public class Utils {
     }
 
     /**
-     * Get mobile model
+     * Get Device model
      *
      * @return
      */
@@ -159,7 +144,7 @@ public class Utils {
     }
 
     /**
-     * Get Mobile Manufacturer
+     * Get Device Manufacturer
      *
      * @return
      */
@@ -169,7 +154,7 @@ public class Utils {
     }
 
     /**
-     * Get mobile produce
+     * Get Device product
      *
      * @return
      */
@@ -179,7 +164,7 @@ public class Utils {
     }
 
     /**
-     * Get mobile fingerprint
+     * Get Device fingerprint
      *
      * @return
      */
@@ -189,7 +174,7 @@ public class Utils {
     }
 
     /**
-     * Get mobile ID
+     * Get Device ID
      *
      * @return
      */
@@ -199,7 +184,7 @@ public class Utils {
     }
 
     /**
-     * Get android version
+     * Get Device Android version
      *
      * @return
      */
@@ -209,7 +194,7 @@ public class Utils {
     }
 
     /**
-     * Get android version integer
+     * Get Device Android version integer
      *
      * @return
      */
@@ -219,9 +204,9 @@ public class Utils {
     }
 
     /**
-     * Checking network or internet is available
+     * Check if network is available
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static boolean isConnected(Context context) {
@@ -233,7 +218,7 @@ public class Utils {
     }
 
     /**
-     * Encode url to make it use to call in web api
+     * Encode boolean param in URL to make it use to call in web api
      *
      * @param data Boolean parameter
      * @return
@@ -248,7 +233,7 @@ public class Utils {
     }
 
     /**
-     * Encode url to make it use to call in web api
+     * Encode integer param in URL to make it use to call in web api
      *
      * @param data Integer parameter
      * @return
@@ -260,7 +245,7 @@ public class Utils {
     }
 
     /**
-     * Encode url to make it use to call in web api
+     * Encode string param in URL to make it use to call in web api
      *
      * @param data String parameter
      * @return
@@ -272,9 +257,9 @@ public class Utils {
     }
 
     /**
-     * Check a package is installed in device or not
+     * Check if an application is installed or not using Package Name
      *
-     * @param context     Context of application
+     * @param context     Application context
      * @param packageName Package name to check
      * @return
      */
@@ -292,101 +277,91 @@ public class Utils {
     /**
      * Showing alert dialog when network is not available
      *
-     * @param context    Context of application
-     * @param isCritical It means if network is necessary dialog will show and cancelable will be false
+     * @param context              application context
+     * @param isConnectionCritical if network is necessary dialog will show and is not cancelable
      * @return
      */
     public static AlertDialog showNoInternetConnectionDialog(
-            final Context context, final boolean isCritical) {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setCancelable(true);
-            builder.setMessage(R.string.no_connection);
-            builder.setTitle(R.string.no_connection_title);
-            builder.setPositiveButton(R.string.settings,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            context.startActivity(new Intent(
-                                    Settings.ACTION_WIFI_SETTINGS));// .ACTION_NETWORK_OPERATOR_SETTINGS));//.ACTION_WIRELESS_SETTINGS));
-                        }
-                    });
-
-            if (isCritical)
-                builder.setNegativeButton(R.string.exit,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                Utils.exit(context);
-                            }
-                        });
-            else
-                builder.setNegativeButton(R.string.abort, null);
-
-            if (isCritical)
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        Utils.exit(context);
+            final Context context, final boolean isConnectionCritical) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(true);
+        builder.setMessage(R.string.no_connection);
+        builder.setTitle(R.string.no_connection_title);
+        builder.setPositiveButton(R.string.settings,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.startActivity(new Intent(
+                                Settings.ACTION_WIFI_SETTINGS));// .ACTION_NETWORK_OPERATOR_SETTINGS));//.ACTION_WIRELESS_SETTINGS));
                     }
                 });
 
-            return builder.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        if (isConnectionCritical)
+            builder.setNegativeButton(R.string.exit,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            Utils.exit(context);
+                        }
+                    });
+        else
+            builder.setNegativeButton(R.string.abort, null);
+
+        if (isConnectionCritical)
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                    Utils.exit(context);
+                }
+            });
+
+        return builder.show();
     }
 
     /**
      * Showing alert dialog when network is not available in offline mode
      *
-     * @param context    Context of application
-     * @param isCritical It means if network is necessary dialog will show and cancelable will be false
+     * @param context              application context
+     * @param isConnectionCritical It means if network is necessary dialog will show and cancelable will be false
      * @return
      */
     public static AlertDialog showNoInternetConnectionDialogOfflineMsg(
-            final Context context, final boolean isCritical) {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setCancelable(true);
-            builder.setMessage(R.string.no_connection);
-            builder.setTitle(R.string.no_connection_title);
-            builder.setPositiveButton(R.string.settings,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            context.startActivity(new Intent(
-                                    Settings.ACTION_WIFI_SETTINGS));// .ACTION_NETWORK_OPERATOR_SETTINGS));//.ACTION_WIRELESS_SETTINGS));
-                        }
-                    });
-
-            if (isCritical)
-                builder.setNegativeButton(R.string.exit,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                Utils.exit(context);
-                            }
-                        });
-            else
-                builder.setNegativeButton(R.string.offline, null);
-
-            if (isCritical)
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        Utils.exit(context);
+            final Context context, final boolean isConnectionCritical) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(true);
+        builder.setMessage(R.string.no_connection);
+        builder.setTitle(R.string.no_connection_title);
+        builder.setPositiveButton(R.string.settings,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.startActivity(new Intent(
+                                Settings.ACTION_WIFI_SETTINGS));// .ACTION_NETWORK_OPERATOR_SETTINGS));//.ACTION_WIRELESS_SETTINGS));
                     }
                 });
 
-            return builder.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        if (isConnectionCritical)
+            builder.setNegativeButton(R.string.exit,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            Utils.exit(context);
+                        }
+                    });
+        else
+            builder.setNegativeButton(R.string.offline, null);
+
+        if (isConnectionCritical)
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                    Utils.exit(context);
+                }
+            });
+
+        return builder.show();
     }
 
     /**
      * Showing alert dialog when server is not available
      *
-     * @param context    Context of application
+     * @param context    Application context
      * @param isCritical It means if server connection is necessary dialog will show and cancelable will be false
      * @return
      */
@@ -420,31 +395,27 @@ public class Utils {
     /**
      * Changing default language
      *
-     * @param context       Context of application
+     * @param context       Application context
      * @param language_code Lang code -> FA or EN - BR and etc.
      * @param title         Will set to activity
      */
     public static void changeLanguage(Context context, String language_code,
                                       String title) {
-        try {
-            Resources res = context.getResources();
-            // Change locale settings in the app.
-            DisplayMetrics dm = res.getDisplayMetrics();
-            android.content.res.Configuration conf = res.getConfiguration();
-            conf.locale = new Locale(language_code);
-            res.updateConfiguration(conf, dm);
+        Resources res = context.getResources();
+        // Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(language_code);
+        res.updateConfiguration(conf, dm);
 
-            Activity activity = (Activity) context;
-            activity.setTitle(title);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Activity activity = (Activity) context;
+        activity.setTitle(title);
     }
 
     /**
      * Changing default language
      *
-     * @param context       Context of application
+     * @param context       Application context
      * @param language_code Lang code -> FA or EN - BR and etc.
      */
     public static void changeLanguage(Context context, String language_code) {
@@ -459,7 +430,7 @@ public class Utils {
     /**
      * Make hidden keyboard of a edit text
      *
-     * @param context Context of application
+     * @param context Application context
      * @param et      Edit text that you want hide the keyboard
      */
     public static void hideKeyboard(Context context, EditText et) {
@@ -474,63 +445,53 @@ public class Utils {
     /**
      * Get Display Width
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     public static int getDisplayWidth(Context context) {
-        try {
-            Activity activity = (Activity) context;
-            if (Integer.valueOf(Build.VERSION.SDK_INT) < 13) {
-                Display display = activity.getWindowManager()
-                        .getDefaultDisplay();
-                return display.getWidth();
-            } else {
-                Display display = activity.getWindowManager()
-                        .getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                return size.x;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
+        Activity activity = (Activity) context;
+        if (Integer.valueOf(Build.VERSION.SDK_INT) < 13) {
+            Display display = activity.getWindowManager()
+                    .getDefaultDisplay();
+            return display.getWidth();
+        } else {
+            Display display = activity.getWindowManager()
+                    .getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            return size.x;
         }
     }
 
     /**
      * Get display height
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     public static int getDisplayHeight(Context context) {
-        try {
-            Activity activity = (Activity) context;
-            if (Integer.valueOf(Build.VERSION.SDK_INT) < 13) {
-                Display display = activity.getWindowManager()
-                        .getDefaultDisplay();
-                return display.getHeight();
-            } else {
-                Display display = activity.getWindowManager()
-                        .getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                return size.y;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
+        Activity activity = (Activity) context;
+        if (Integer.valueOf(Build.VERSION.SDK_INT) < 13) {
+            Display display = activity.getWindowManager()
+                    .getDefaultDisplay();
+            return display.getHeight();
+        } else {
+            Display display = activity.getWindowManager()
+                    .getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            return size.y;
         }
     }
 
     /**
      * Play a sound
      *
-     * @param context Context of application
+     * @param context Application context
      * @param rawID   Raw integer id in resource
      */
     public static void playSound(Context context, int rawID) {
@@ -541,7 +502,7 @@ public class Utils {
     /**
      * Get Application name
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      * @throws NameNotFoundException
      */
@@ -557,12 +518,11 @@ public class Utils {
     /**
      * Get Application version name
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      * @throws NameNotFoundException
      */
-    public static String getApplicationVersionName(Context context)
-            throws NameNotFoundException {
+    public static String getApplicationVersionName(Context context) throws NameNotFoundException {
         // Application version
         PackageInfo pInfo = context.getPackageManager().getPackageInfo(
                 context.getPackageName(), 0);
@@ -570,29 +530,23 @@ public class Utils {
     }
 
     /**
-     * Get application version codde
+     * Get application version code
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      * @throws NameNotFoundException
      */
-    public static int getApplicationVersionCode(Context context) {
+    public static int getApplicationVersionCode(Context context) throws NameNotFoundException {
         // Application version
         PackageInfo pInfo = null;
-        try {
-            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            return pInfo.versionCode;
-        }
-
+        pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        return pInfo.versionCode;
     }
 
     /**
      * Get android ID
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static String getAndroidID(Context context) {
@@ -605,22 +559,19 @@ public class Utils {
     /**
      * Play notification sound
      *
-     * @param context Context of application
+     * @param context Application context
      */
     public static void playNotificationSound(Context context) {
-        try {
-            Uri notification = RingtoneManager
-                    .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(context, notification);
-            r.play();
-        } catch (Exception e) {
-        }
+        Uri notification = RingtoneManager
+                .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone r = RingtoneManager.getRingtone(context, notification);
+        r.play();
     }
 
     /**
      * Checking a service is running or not
      *
-     * @param context   Context of application
+     * @param context   Application context
      * @param myService Set your service class
      * @return
      */
@@ -642,7 +593,7 @@ public class Utils {
      * @param melliCode Getting national code
      * @return
      */
-    public static boolean checkNationalCode(String melliCode) {
+    public static boolean checkIranianNationalityCode(String melliCode) {
         try {
             melliCode = melliCode.replaceAll("-", "");
             if (melliCode.length() == 10) {
@@ -679,7 +630,6 @@ public class Utils {
                 return false;
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -707,7 +657,7 @@ public class Utils {
     /**
      * Put fake sms in inbox of device
      *
-     * @param context Context of application
+     * @param context Application context
      * @param address Phone number
      * @param body    SMS Body
      */
@@ -724,7 +674,7 @@ public class Utils {
     /**
      * Put fake MMS in inbox of device
      *
-     * @param context Context of application
+     * @param context Application context
      * @param address Phone number
      * @param body    MMS Body
      */
@@ -741,93 +691,38 @@ public class Utils {
     /**
      * Getting a full list of data from device
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      * @throws UnsupportedEncodingException
      * @throws NameNotFoundException
      */
-    public static List<BasicNameValuePair> getDeviceInfoParamsForUrl(
-            Context context) throws UnsupportedEncodingException,
-            NameNotFoundException {
+    public static HashMap<String, String> getDeviceInfoParamsForUrl(Context context) throws UnsupportedEncodingException, NameNotFoundException {
         if (deviceInfoParams == null) {
-            deviceInfoParams = new ArrayList<BasicNameValuePair>();
+            deviceInfoParams = new HashMap<>();
 
-            BasicNameValuePair androidVersionName = new BasicNameValuePair(
-                    "androidVersionName", Utils.getAndroidVersion());
-            deviceInfoParams.add(androidVersionName);
-
-            BasicNameValuePair androidVersionId = new BasicNameValuePair(
-                    "androidVersionId", Utils.getAndroidVersionInt() + "");
-            deviceInfoParams.add(androidVersionId);
-
-            BasicNameValuePair androidId = new BasicNameValuePair("androidId",
-                    Utils.getAndroidID(context));
-            // BasicNameValuePair androidId = new BasicNameValuePair("deviceId",
-            // Utils.getAndroidID(context));
-            deviceInfoParams.add(androidId);
-
-            BasicNameValuePair mobileModel = new BasicNameValuePair(
-                    "mobileModel", Utils.getMobileModel());
-            deviceInfoParams.add(mobileModel);
-
-            BasicNameValuePair mobileManufacturer = new BasicNameValuePair(
-                    "mobileManufacturer", Utils.getMobileManufacturer());
-            deviceInfoParams.add(mobileManufacturer);
-
-            BasicNameValuePair mobileId = new BasicNameValuePair("mobileId",
-                    Utils.getMobileId());
-            deviceInfoParams.add(mobileId);
-
-            BasicNameValuePair mobileProduct = new BasicNameValuePair(
-                    "mobileProduct", Utils.getMobileProduct());
-            deviceInfoParams.add(mobileProduct);
-
-            BasicNameValuePair applicationName = new BasicNameValuePair(
-                    "applicationName", Utils.getApplicationName(context));
-            deviceInfoParams.add(applicationName);
-
-            BasicNameValuePair applicationVersionName = new BasicNameValuePair(
-                    "applicationVersionName",
-                    Utils.getApplicationVersionName(context));
-            deviceInfoParams.add(applicationVersionName);
-
-            BasicNameValuePair applicationVersionCode = new BasicNameValuePair(
-                    "applicationVersionCode",
-                    Utils.getApplicationVersionCode(context) + "");
-            deviceInfoParams.add(applicationVersionCode);
-
-            // BasicNameValuePair applicationState = new BasicNameValuePair(
-            // "applicationState", Utils.getAppState(context).toString());
-            // deviceInfoParams.add(applicationState);
-
-            BasicNameValuePair screenWidth = new BasicNameValuePair(
-                    "screenWidth", Utils.getDisplayWidth(context) + "");
-            deviceInfoParams.add(screenWidth);
-
-            BasicNameValuePair screenHeight = new BasicNameValuePair(
-                    "screenHeight", Utils.getDisplayWidth(context) + "");
-            deviceInfoParams.add(screenHeight);
-
-            BasicNameValuePair screenDensity = new BasicNameValuePair(
-                    "screenDensity", Utils.getDisplayDensity(context) + "");
-            deviceInfoParams.add(screenDensity);
-
-            BasicNameValuePair screenDensityName = new BasicNameValuePair(
-                    "screenDensityName", Utils.getDisplaySize(context)
-                    .toString());
-            deviceInfoParams.add(screenDensityName);
-
-            BasicNameValuePair atdPackages = new BasicNameValuePair(
-                    "atdPackages", Utils.getKarinaPackages(context));
-            deviceInfoParams.add(atdPackages);
+            deviceInfoParams.put("androidVersionName", Utils.getAndroidVersion());
+            deviceInfoParams.put("androidVersionId", Utils.getAndroidVersionInt() + "");
+            deviceInfoParams.put("androidId", Utils.getAndroidID(context));
+            deviceInfoParams.put("mobileModel", Utils.getMobileModel());
+            deviceInfoParams.put("mobileManufacturer", Utils.getMobileManufacturer());
+            deviceInfoParams.put("mobileId", Utils.getMobileId());
+            deviceInfoParams.put("mobileProduct", Utils.getMobileProduct());
+            deviceInfoParams.put("applicationName", Utils.getApplicationName(context));
+            deviceInfoParams.put("applicationVersionName", Utils.getApplicationVersionName(context));
+            deviceInfoParams.put("applicationVersionCode", Utils.getApplicationVersionCode(context) + "");
+            deviceInfoParams.put("screenWidth", Utils.getDisplayWidth(context) + "");
+            deviceInfoParams.put("screenHeight", Utils.getDisplayWidth(context) + "");
+            deviceInfoParams.put("screenDensity", Utils.getDisplayDensity(context) + "");
+            deviceInfoParams.put("screenDensityName", Utils.getDisplaySize(context).toString());
+            deviceInfoParams.put("atdPackages", Utils.getKarinaPackages(context));
         }
-        return new ArrayList<BasicNameValuePair>(deviceInfoParams);
+        return new HashMap<>(deviceInfoParams);
     }
 
     /**
      * Get Display density
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static int getDisplayDensity(Context context) {
@@ -838,7 +733,7 @@ public class Utils {
     /**
      * Get display size
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static enumDensity getDisplaySize(Context context) {
@@ -852,7 +747,7 @@ public class Utils {
     /**
      * Get all applications of karina in device
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static String getKarinaPackages(Context context) {
@@ -917,31 +812,25 @@ public class Utils {
     }
 
     /**
-     * Making empty all data of application cache
+     * Making empty all application data in cache
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
-    public static Boolean emptyAllData(Context context) {
+    public static Boolean emptyAllApplicationData(Context context) {
+        File cache = context.getCacheDir();
+        File appDir = new File(cache.getParent());
 
-        try {
-            File cache = context.getCacheDir();
-            File appDir = new File(cache.getParent());
-
-            if (appDir.exists()) {
-                String[] children = appDir.list();
-                for (String s : children) {
-                    if (!s.equals("databases")) {
-                        deleteDir(new File(appDir, s));
-                    }
+        if (appDir.exists()) {
+            String[] children = appDir.list();
+            for (String s : children) {
+                if (!s.equals("databases")) {
+                    deleteDir(new File(appDir, s));
                 }
             }
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
+
+        return true;
     }
 
     /**
@@ -966,7 +855,7 @@ public class Utils {
     /**
      * Checking install package permission
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static boolean checkInstallPackagesPermission(Context context) {
@@ -978,7 +867,7 @@ public class Utils {
     /**
      * Checking write sms permission
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static boolean checkWriteSMSPermission(Context context) {
@@ -990,7 +879,7 @@ public class Utils {
     /**
      * Checking read sms permission
      *
-     * @param context Context of application
+     * @param context Application context
      * @return
      */
     public static boolean checkReadSMSPermission(Context context) {
@@ -1000,83 +889,14 @@ public class Utils {
     }
 
     /**
-     * Getting date string in a specific format
+     * Checking if a string number or not
      *
-     * @param context  Context of application
-     * @param cal      Calendar object
-     * @param language Language code -> FA or EN and etc.
+     * @param value string value
      * @return
      */
-    public static String getDateString(Context context, Calendar cal,
-                                       String language) {
-        if (language.toLowerCase().trim().equals("fa")) {
-            CalendarTool calTool = new CalendarTool(cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-            return String.format("%s/%s/%s", calTool.getIranianYear(),
-                    calTool.getIranianMonth(), calTool.getIranianDay());
-        } else {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-            return df.format(cal.getTime());
-        }
-    }
-
-    /**
-     * Get Long date value
-     *
-     * @param context  Context of application
-     * @param year     Year integer
-     * @param month    Month integer
-     * @param day      day integer
-     * @param language Language code -> FA or EN and etc.
-     * @return
-     */
-    @SuppressWarnings("deprecation")
-    public static long getDateLong(Context context, int year, int month,
-                                   int day, String language) {
-        if (language.toLowerCase().equals("fa")) {
-            // JalaliCalendar cal = new JalaliCalendar(year, month, day +
-            // 1);
-            CalendarTool calTool = new CalendarTool();
-            calTool.setIranianDate(year, month, day);
-            return Date.parse(calTool.getGregorianDate());// cal.getTimeInMillis();//
-        } else {
-            return Date.parse(String.format("%s//%d//%d", year, month, day));
-        }
-    }
-
-    /**
-     * Getting long date value
-     *
-     * @param context  Context of application
-     * @param date     Date object
-     * @param language Language code -> FA or EN and etc.
-     * @return
-     */
-    @SuppressWarnings("deprecation")
-    public static long getDateLong(Context context, String date, String language) {
-        if (language.toLowerCase().equals("fa")) {
-            int year = Integer.parseInt(date.trim().split("/")[0]);
-            int month = Integer.parseInt(date.trim().split("/")[1]);
-            int day = Integer.parseInt(date.trim().split("/")[2]);
-            // JalaliCalendar cal = new JalaliCalendar(year, month, day +
-            // 1);
-            CalendarTool calTool = new CalendarTool();
-            calTool.setIranianDate(year, month, day);
-            return Date.parse(calTool.getGregorianDate());// cal.getTimeInMillis();//
-        } else {
-            return Date.parse(date);
-        }
-    }
-
-    /**
-     * Checking a string that is numeric or not
-     *
-     * @param str Input string
-     * @return
-     */
-    public static boolean isNumeric(String str) {
+    public static boolean isNumber(String value) {
         try {
-            Double.parseDouble(str);
+            Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -1120,44 +940,6 @@ public class Utils {
             }
         }
         return false;
-    }
-
-    public static void runApplication(final Context ctx, String packageName) {
-        try {
-            Intent LaunchIntent = ctx.getPackageManager().getLaunchIntentForPackage(packageName);
-            ctx.startActivity(LaunchIntent);
-        } catch (Exception e) {
-            Handler h = new Handler(Looper.getMainLooper());
-            h.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(ctx, Farsi.Convert("برنامه ی مورد نظر یافت نشد"), Toast.LENGTH_SHORT).show();
-                }
-            });
-            e.printStackTrace();
-        }
-    }
-
-    public static Boolean isDownloaded(Context context, String packageName, String versionCode) {
-        final String appName = packageName + "." + versionCode + ".apk";
-        File dir = new File(Environment.getExternalStorageDirectory() + "/" + DIRECTORY_PUBLIC_DOWNLOAD);
-        if (dir.exists() && dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            for (File file : files) {
-                if (file.getName().equalsIgnoreCase(appName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static void installPackage(Context context, String packageName, String versionCode) {
-        String appName = packageName + "." + versionCode + ".apk";
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/" + DIRECTORY_PUBLIC_DOWNLOAD + "/" + appName)), "application/vnd.android.package-archive");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 
     private boolean isMyServiceRunning(Context ctx, Class<?> serviceClass) {

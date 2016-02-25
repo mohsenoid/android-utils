@@ -286,9 +286,9 @@ public class Utils {
             final Context context, final boolean isConnectionCritical) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
-        builder.setMessage(R.string.no_connection);
-        builder.setTitle(R.string.no_connection_title);
-        builder.setPositiveButton(R.string.settings,
+        builder.setMessage(R.string.utils__no_connection);
+        builder.setTitle(R.string.utils__no_connection_title);
+        builder.setPositiveButton(R.string.utils__settings,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         context.startActivity(new Intent(
@@ -297,7 +297,7 @@ public class Utils {
                 });
 
         if (isConnectionCritical)
-            builder.setNegativeButton(R.string.exit,
+            builder.setNegativeButton(R.string.utils__exit,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
@@ -305,7 +305,7 @@ public class Utils {
                         }
                     });
         else
-            builder.setNegativeButton(R.string.abort, null);
+            builder.setNegativeButton(R.string.utils__abort, null);
 
         if (isConnectionCritical)
             builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -328,9 +328,9 @@ public class Utils {
             final Context context, final boolean isConnectionCritical) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
-        builder.setMessage(R.string.no_connection);
-        builder.setTitle(R.string.no_connection_title);
-        builder.setPositiveButton(R.string.settings,
+        builder.setMessage(R.string.utils__no_connection);
+        builder.setTitle(R.string.utils__no_connection_title);
+        builder.setPositiveButton(R.string.utils__settings,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         context.startActivity(new Intent(
@@ -339,7 +339,7 @@ public class Utils {
                 });
 
         if (isConnectionCritical)
-            builder.setNegativeButton(R.string.exit,
+            builder.setNegativeButton(R.string.utils__exit,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
@@ -347,7 +347,7 @@ public class Utils {
                         }
                     });
         else
-            builder.setNegativeButton(R.string.offline, null);
+            builder.setNegativeButton(R.string.utils__offline, null);
 
         if (isConnectionCritical)
             builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -370,18 +370,18 @@ public class Utils {
             final Context context, final boolean isCritical) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
-        builder.setMessage(R.string.no_server);
-        builder.setTitle(R.string.no_server_title);
+        builder.setMessage(R.string.utils__no_server);
+        builder.setTitle(R.string.utils__no_server_title);
 
         if (isCritical)
-            builder.setNegativeButton(R.string.exit,
+            builder.setNegativeButton(R.string.utils__exit,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Utils.exit(context);
                         }
                     });
         else
-            builder.setNegativeButton(R.string.abort, null);
+            builder.setNegativeButton(R.string.utils__abort, null);
 
         if (isCritical)
             builder.setOnCancelListener(new DialogInterface.OnCancelListener() {

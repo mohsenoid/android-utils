@@ -1,7 +1,7 @@
 Utils
 =====
 
-![Logo](icon.png)
+![Logo](logo.png)
 
 Android Common Utils Library
 

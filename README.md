@@ -1,5 +1,5 @@
-Utils
-=====
+Android Utils [![Circle CI](https://circleci.com/gh/mmirhoseini/android_utils.svg?style=svg)](https://circleci.com/gh/mmirhoseini/android_utils)
+=============
 
 ![Logo](logo.png)
 

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
@@ -30,13 +31,15 @@ import android.view.Display;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -951,6 +954,71 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * Get IP address from first non-localhost interface
+     *
+     * @param useIPv4 true=return ipv4, false=return ipv6
+     * @return address or empty string
+     */
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':') < 0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        } // for now eat exceptions
+        return "";
+    }
+
+    /**
+     * check if current device is Tablet
+     *
+     * @param context Application context
+     * @return isTablet
+     */
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+    /**
+     * check if current device state is Portrait
+     *
+     * @param context Application context
+     * @return isPortrait
+     */
+    public static boolean isPortrait(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    /**
+     * get device current timestamp
+     *
+     * @return isPortrait
+     */
+    public static long getCurrentTimestamp() {
+        return System.currentTimeMillis() / 1000;
     }
 
     /**

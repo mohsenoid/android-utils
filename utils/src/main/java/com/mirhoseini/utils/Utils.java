@@ -73,7 +73,7 @@ public class Utils {
      * Convert an integer array to csv format
      *
      * @param array Input array
-     * @return
+     * @return csv
      */
     public static String intArrayToCSV(int[] array) {
         String result = "";
@@ -400,7 +400,7 @@ public class Utils {
      * Changing default language
      *
      * @param context       Application context
-     * @param language_code Lang code -> FA or EN - BR and etc.
+     * @param language_code Lang code to FA or EN - BR and etc.
      * @param title         Will set to activity
      */
     public static void changeLanguage(Context context, String language_code,
@@ -420,7 +420,7 @@ public class Utils {
      * Changing default language
      *
      * @param context       Application context
-     * @param language_code Lang code -> FA or EN - BR and etc.
+     * @param language_code Lang code to FA or EN - BR and etc.
      */
     public static void changeLanguage(Context context, String language_code) {
         Resources res = context.getResources();

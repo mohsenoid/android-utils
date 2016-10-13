@@ -438,9 +438,6 @@ public class Utils {
      * @param et      Edit text that you want hide the keyboard
      */
     public static void hideKeyboard(Context context, EditText et) {
-        // ((Activity) context).getWindow().setSoftInputMode(
-        // WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);

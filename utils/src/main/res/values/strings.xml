@@ -1,16 +1,19 @@
 <resources>
-    <string name="utils__msg_exit">Press back again to exit</string>
+    <string name="utils__error">Something goes wrong with this app, please try again…</string>
     <string name="utils__error_title">Error</string>
+    <string name="utils__msg_exit">Press back again to exit</string>
     <string name="utils__exit">Exit</string>
     <string name="utils__abort">Abort</string>
     <string name="utils__offline">Offline</string>
     <string name="utils__retry">Retry</string>
-    <string name="utils__no_external_storage">No external storage is available&#8230;</string>
-    <string name="utils__no_connection">No internet connection is available&#8230;</string>
+    <string name="utils__no_external_storage">No external storage is available…</string>
+    <string name="utils__no_connection">No internet connection is available…</string>
     <string name="utils__no_connection_title">Network Error</string>
-    <string name="utils__no_server">Server is not responsible&#8230;</string>
+    <string name="utils__no_server">Server is not responsible…</string>
     <string name="utils__no_server_title">Server Error</string>
-    <string name="utils__settings">Settings&#8230;</string>
+    <string name="utils__connection_timeout">Connection timeout…</string>
+    <string name="utils__connection_timeout_title">Network error</string>
+    <string name="utils__settings">Settings…</string>
     <string name="utils__ago_sec">Second(s) Ago</string>
     <string name="utils__ago_min">Minutes(s) Ago</string>
     <string name="utils__ago_hour">Hour(s) Ago</string>

@@ -15,7 +15,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -25,7 +27,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.MetricAffectingSpan;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.inputmethod.InputMethodManager;
@@ -1050,5 +1056,36 @@ public class Utils {
         public void setValue(Float value) {
             this.value = value;
         }
+    }
+
+    /**
+     * Apply typeface to a plane text and return spannableString
+     *
+     * @param text Text that you want to apply typeface
+     * @param typeface Typeface that you want to apply to your text
+     * @return spannableString
+     */
+    public static SpannableString applyTypefaceToString(String text, final Typeface typeface) {
+        SpannableString spannableString = new SpannableString(text);
+        spannableString.setSpan(new MetricAffectingSpan() {
+                                    @Override
+                                    public void updateMeasureState(TextPaint p) {
+                                        p.setTypeface(typeface);
+
+                                        // Note: This flag is required for proper typeface rendering
+                                        p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+                                    }
+
+                                    @Override
+                                    public void updateDrawState(TextPaint tp) {
+                                        tp.setTypeface(typeface);
+
+                                        // Note: This flag is required for proper typeface rendering
+                                        tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+                                    }
+                                }, 0, spannableString.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
     }
 }

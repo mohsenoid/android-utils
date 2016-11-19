@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
+import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -34,8 +35,8 @@ import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import java.io.File;
 import java.io.IOException;
@@ -438,15 +439,34 @@ public class Utils {
     }
 
     /**
-     * Make hidden keyboard of a edit text
+     * Hide keyboard of a View
      *
      * @param context Application context
-     * @param et      Edit text that you want hide the keyboard
+     * @param view    Edit text or another view that you want hide the keyboard
      */
-    public static void hideKeyboard(Context context, EditText et) {
-        InputMethodManager imm = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    public static void hideKeyboard(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    /**
+     * Hide keyboard
+     *
+     * @param activity Activity
+     */
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        hideKeyboard(activity, view);
+    }
+
+    /**
+     * Hide keyboard
+     *
+     * @param fragment Fragment
+     */
+    public static void hideKeyboard(Fragment fragment) {
+        View view = fragment.getActivity().getCurrentFocus();
+        hideKeyboard(fragment.getContext(), view);
     }
 
     /**
@@ -1061,7 +1081,7 @@ public class Utils {
     /**
      * Apply typeface to a plane text and return spannableString
      *
-     * @param text Text that you want to apply typeface
+     * @param text     Text that you want to apply typeface
      * @param typeface Typeface that you want to apply to your text
      * @return spannableString
      */

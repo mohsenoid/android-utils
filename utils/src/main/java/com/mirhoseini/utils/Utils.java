@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -439,12 +440,24 @@ public class Utils {
     }
 
     /**
+     * Show keyboard of a View
+     *
+     * @param context Application context
+     * @param view    Edit text or another view that you want hide the keyboard
+     */
+    public static void showKeyboard(Context context, @NonNull View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+
+    /**
      * Hide keyboard of a View
      *
      * @param context Application context
      * @param view    Edit text or another view that you want hide the keyboard
      */
-    public static void hideKeyboard(Context context, View view) {
+    public static void hideKeyboard(Context context, @NonNull View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -456,7 +469,8 @@ public class Utils {
      */
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
-        hideKeyboard(activity, view);
+        if (null != view)
+            hideKeyboard(activity, view);
     }
 
     /**
@@ -523,6 +537,12 @@ public class Utils {
      */
     public static void playSound(Context context, int rawID) {
         MediaPlayer mp = MediaPlayer.create(context, rawID);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
         mp.start();
     }
 
@@ -919,7 +939,7 @@ public class Utils {
      * Checking if a string number or not
      *
      * @param value string value
-     * @return
+     * @return is Number
      */
     public static boolean isNumber(String value) {
         try {
@@ -933,8 +953,8 @@ public class Utils {
     /**
      * Getting all installed packages
      *
-     * @param context
-     * @return
+     * @param context Application context
+     * @return all installed applications list
      */
     public static List<PackageInfo> getAllInstalledApplication(Context context) {
         final PackageManager pm = context.getPackageManager();
@@ -949,12 +969,9 @@ public class Utils {
 
         ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
 
-        String str = "";
         List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
 
-        str = processes.get(0).processName;
-
-        return str;
+        return processes.get(0).processName;
     }
 
     public static boolean isMyServiceRunning(Context ctx, String serviceClassName) {

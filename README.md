@@ -15,13 +15,13 @@ Grab via Maven:
 <dependency>
   <groupId>com.mirhoseini.utils</groupId>
   <artifactId>utils</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.8</version>
   <type>pom</type>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.mirhoseini.utils:utils:1.0.0'
+compile 'com.mirhoseini.utils:utils:1.0.8'
 ```
 
 ![Screenshot](/Screenshot.png)

@@ -1,7 +1,5 @@
 package com.mirhoseini.utils;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,96 +8,99 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.SmsManager;
 
+import java.util.ArrayList;
+
 public class SmsSender {
-	Context context;
-	String callCenter;
 
-	public interface smsListener {
+    static final String ACTION_SENT = "SMS_SENT";
+    static final String ACTION_DELIVERED = "SMS_DELIVERED";
 
-		public void OnSending();
+    public interface SmsListener {
 
-		public void OnSent();
+        void onSending();
 
-		public void OnNotSent();
+        void onSent();
 
-		public void OnDelivered();
+        void onNotSent();
 
-		public void OnNotDelivered();
-	}
+        void onDelivered();
 
-	/** Called when the activity is first created. */
-	public SmsSender(Context c, String cCenter) {
-		context = c;
-		callCenter = cCenter;
-	}
+        void onNotDelivered();
 
-	// ---sends a SMS message to another device---
-	public void sendSMS(String message, final smsListener smsListner) {
+        void onError(Exception e);
+    }
 
-		SmsManager sms = SmsManager.getDefault();
+    // ---sends a SMS message to another device---
+    public static void sendSMS(final Context context, String to, String message, final com.mirhoseini.utils.SmsSender.SmsListener listener) {
 
-		String SENT = "SMS_SENT";
-		String DELIVERED = "SMS_DELIVERED";
+        SmsManager sms = SmsManager.getDefault();
 
-		// ---when the SMS has been sent---
-		context.registerReceiver(new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context c, Intent i) {
-				switch (getResultCode()) {
-				case Activity.RESULT_OK:
-					if (smsListner != null)
-						smsListner.OnSent();
+        // ---when the SMS has been sent---
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent i) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        if (listener != null)
+                            listener.onSent();
 
-					break;
-				default:
-					if (smsListner != null)
-						smsListner.OnNotSent();
-					break;
-				}
-				c.unregisterReceiver(this);
-			}
-		}, new IntentFilter(SENT));
+                        context.unregisterReceiver(this);
+                        break;
+                    default:
+                        if (listener != null)
+                            listener.onNotSent();
 
-		// ---when the SMS has been delivered---
-		context.registerReceiver(new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context c, Intent i) {
-				switch (getResultCode()) {
-				case Activity.RESULT_OK:
-					if (smsListner != null)
-						smsListner.OnDelivered();
-					break;
-				default:
-					if (smsListner != null)
-						smsListner.OnNotDelivered();
-					break;
+                        context.unregisterReceiver(this);
+                        break;
+                }
+            }
+        }, new IntentFilter(ACTION_SENT));
 
-				}
-				c.unregisterReceiver(this);
-			}
-		}, new IntentFilter(DELIVERED));
+        // ---when the SMS has been delivered---
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent i) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        if (listener != null)
+                            listener.onDelivered();
 
-		if (smsListner != null)
-			smsListner.OnSending();
+                        context.unregisterReceiver(this);
+                        break;
+                    default:
+                        if (listener != null)
+                            listener.onNotDelivered();
 
-		ArrayList<String> msgStringArray = sms.divideMessage(message);
-		int msgCount = msgStringArray.size();
+                        context.unregisterReceiver(this);
+                        break;
+                }
+            }
+        }, new IntentFilter(ACTION_DELIVERED));
 
-		ArrayList<PendingIntent> sentPI = new ArrayList<PendingIntent>(msgCount);
+        if (listener != null)
+            listener.onSending();
 
-		ArrayList<PendingIntent> deliveredPI = new ArrayList<PendingIntent>(
-				msgCount);
+        ArrayList<String> msgStringArray = sms.divideMessage(message);
+        int msgCount = msgStringArray.size();
 
-		for (int i = 0; i < msgCount; i++) {
-			sentPI.add(PendingIntent.getBroadcast(context, 0, new Intent(SENT),
-					0));
-			deliveredPI.add(PendingIntent.getBroadcast(context, 0, new Intent(
-					DELIVERED), 0));
-		}
+        ArrayList<PendingIntent> sentPI = new ArrayList<>(msgCount);
 
-		sms.sendMultipartTextMessage(callCenter, null, msgStringArray, sentPI,
-				deliveredPI);
+        ArrayList<PendingIntent> deliveredPI = new ArrayList<>(msgCount);
 
-	}
+        for (int i = 0; i < msgCount; i++) {
+            sentPI.add(PendingIntent.getBroadcast(context, 0, new Intent(ACTION_SENT),
+                    0));
+            deliveredPI.add(PendingIntent.getBroadcast(context, 0, new Intent(ACTION_DELIVERED), 0));
+        }
+
+        try {
+            sms.sendMultipartTextMessage(to, null, msgStringArray, sentPI,
+                    deliveredPI);
+        } catch (Exception e) {
+            if (listener != null)
+                listener.onError(e);
+        }
+
+    }
 
 }

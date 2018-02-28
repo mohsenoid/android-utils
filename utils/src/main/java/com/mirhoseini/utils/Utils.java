@@ -18,6 +18,8 @@ import android.content.res.Resources.NotFoundException;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -537,6 +539,16 @@ public class Utils {
      */
     public static void playSound(Context context, int rawID) {
         MediaPlayer mp = MediaPlayer.create(context, rawID);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mp.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build());
+        } else {
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
+
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {

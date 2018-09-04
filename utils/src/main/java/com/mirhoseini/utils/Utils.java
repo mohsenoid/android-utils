@@ -144,6 +144,7 @@ public class Utils {
     public static void openWebsite(Context context, String url) {
         Intent webIntent = new Intent(Intent.ACTION_VIEW);
         webIntent.setData(Uri.parse(url));
+        webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(webIntent);
     }
 

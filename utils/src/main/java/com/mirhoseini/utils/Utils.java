@@ -539,6 +539,17 @@ public class Utils {
      * @param rawID   Raw integer id in resource
      */
     public static void playSound(Context context, int rawID) {
+        playSound(context, rawID, null);
+    }
+
+    /**
+     * Play a sound
+     *
+     * @param context  Application context
+     * @param rawID    Raw integer id in resource
+     * @param listener On completion listener
+     */
+    public static void playSound(Context context, final int rawID, final OnCompletionListener listener) {
         MediaPlayer mp = MediaPlayer.create(context, rawID);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -554,9 +565,14 @@ public class Utils {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mp.release();
+                if (listener != null) listener.onCompletion(rawID);
             }
         });
         mp.start();
+    }
+
+    public interface OnCompletionListener {
+        void onCompletion(int rawID);
     }
 
     /**

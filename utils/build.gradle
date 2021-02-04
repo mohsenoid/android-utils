@@ -3,21 +3,21 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 version = "1.0.13"
-group = "com.mirhoseini.utils"
+group = "com.mohsenoid.utils"
 
-def siteUrl = "http://mirhoseini.com/android-utils"
+def siteUrl = "http://mohsenoid.com/android-utils"
 def gitUrl = "https://github.com/mohsenoid/android_utils.git"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 30
     buildToolsVersion "27.0.3"
     resourcePrefix "utils__"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
         versionCode 13
-        versionName "1.0.13"
+        targetSdkVersion 30
+        versionName version
     }
     buildTypes {
         release {
@@ -34,10 +34,8 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 bintray {
-//    user = System.getenv("BINTRAY_USER")
-//    key = System.getenv("BINTRAY_APIKEY")
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_APIKEY")
 
     configurations = ['archives']
     pkg {
@@ -45,7 +43,7 @@ bintray {
         name = "android-utils"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
-        licenses = ["MIT"]
+        licenses = ["Apache-2.0"]
         publish = true
     }
 }
@@ -70,9 +68,9 @@ install {
                 }
                 developers {
                     developer {
-                        id 'mmirhoseini'
-                        name 'Mohsen Mirhoseini Argi'
-                        email 'msn.mirhoseini@gmail.com'
+                        id 'mohsenoid'
+                        name 'Mohsen Mirhoseini'
+                        email 'contact@mohsenoid.com'
                     }
                 }
                 scm {
@@ -86,16 +84,9 @@ install {
     }
 }
 
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-v4:27.1.0'
-}
-
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 task javadoc(type: Javadoc) {
@@ -104,8 +95,8 @@ task javadoc(type: Javadoc) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
     from javadoc.destinationDir
+    archiveClassifier.set('javadoc')
 }
 
 artifacts {
@@ -113,6 +104,7 @@ artifacts {
     archives sourcesJar
 }
 
-task findConventions << {
-    println project.getConvention()
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }

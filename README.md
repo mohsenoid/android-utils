@@ -13,7 +13,7 @@ USAGE
 Grab via Maven:
 ```xml
 <dependency>
-  <groupId>com.mirhoseini.utils</groupId>
+  <groupId>com.mohsenoid.utils</groupId>
   <artifactId>utils</artifactId>
   <version>1.0.10</version>
   <type>pom</type>
@@ -21,7 +21,7 @@ Grab via Maven:
 ```
 or Gradle:
 ```groovy
-compile 'com.mirhoseini.utils:utils:1.0.10'
+compile 'com.mohsenoid.utils:utils:1.0.10'
 ```
 
 ![Screenshot](/Screenshot.png)
@@ -48,9 +48,3 @@ License
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-    
-Designed By: [<b>Mohsen Mirhoseini Argi</b>][1]<br />
-
-Contact me: mohsen@mirhoseini.com
-
-[1]: http://www.mirhoseini.com

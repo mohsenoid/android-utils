@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.0.13"
+version = "1.0.14"
 group = "com.mohsenoid.utils"
 
 def siteUrl = "http://mohsenoid.com/android-utils"
@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 13
         targetSdkVersion 30
+        versionCode 14
         versionName version
     }
     buildTypes {

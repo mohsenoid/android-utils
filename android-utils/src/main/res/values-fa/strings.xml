@@ -1,0 +1,23 @@
+<resources>
+    <string name="androidutils__error">متأسفانه خطایی در اجرای نرم افزار رخ داده است، لطفا مجددا تلاش نمایید…</string>
+    <string name="androidutils__error_title">خطا</string>
+    <string name="androidutils__msg_exit">برای خروج دکمه ی بازگشت را مجددا بزنید</string>
+    <string name="androidutils__exit">خروج</string>
+    <string name="androidutils__abort">انصراف و ادامه</string>
+    <string name="androidutils__offline">نمایش آفلاین</string>
+    <string name="androidutils__retry">تلاش مجدد</string>
+    <string name="androidutils__no_external_storage">امکان دسترسی به حافظه جانبی برای دانلود نرم افزار وجود ندارد…</string>
+    <string name="androidutils__no_connection">عدم دسترسی به شبکه…</string>
+    <string name="androidutils__no_connection_title">خطای شبکه</string>
+    <string name="androidutils__no_server">متأسفانه سرور نرم افزار پاسخگو نمی باشد…</string>
+    <string name="androidutils__no_server_title">خطای سرور</string>
+    <string name="androidutils__connection_timeout">اطلاعاتی از سرور دریافت نشد…</string>
+    <string name="androidutils__connection_timeout_title">خطای شبکه</string>
+    <string name="androidutils__settings">تنظیمات…</string>
+    <string name="androidutils__ago_sec">ثانیه پیش</string>
+    <string name="androidutils__ago_min">دقیقه پیش</string>
+    <string name="androidutils__ago_hour">ساعت پیش</string>
+    <string name="androidutils__ago_day">روز پیش</string>
+    <string name="androidutils__ago_month">ماه پیش</string>
+    <string name="androidutils__ago_year">سال پیش</string>
+</resources>

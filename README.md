@@ -13,15 +13,15 @@ USAGE
 Grab via Maven:
 ```xml
 <dependency>
-  <groupId>com.mohsenoid.utils</groupId>
-  <artifactId>utils</artifactId>
+  <groupId>com.mohsenoid.android-utils</groupId>
+  <artifactId>android-utils</artifactId>
   <version>1.0.14</version>
   <type>pom</type>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.mohsenoid.utils:utils:1.0.14'
+compile 'com.mohsenoid.android-utils:android-utils:1.0.14'
 ```
 
 ![Screenshot](/Screenshot.png)

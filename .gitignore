@@ -64,3 +64,6 @@ import-summary.txt
 
 # publish Folder
 publish/
+
+# GPG SecretKeyRingFile
+*.gpg
